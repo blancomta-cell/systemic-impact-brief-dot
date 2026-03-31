@@ -76,9 +76,6 @@ ${email || 'No facilitado'}
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userInput },
       ],
-      text: {
-        verbosity: 'low',
-      },
     });
 
     const raw = response.output_text?.trim();
@@ -107,8 +104,13 @@ ${email || 'No facilitado'}
   } catch (error) {
     console.error('systemic-impact-brief error:', error);
     return NextResponse.json(
-      { error: 'No hemos podido generar el brief ahora mismo.' },
-      { status: 500 }
+      {
+        error:
+          error?.error?.message ||
+          error?.message ||
+          'Error desconocido en el servidor',
+      },
+      { status: error?.status || 500 }
     );
   }
 }
